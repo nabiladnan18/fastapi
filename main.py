@@ -27,7 +27,7 @@ async def get_item(item_id: int):
 
 @app.get("/fakeItems/{item_id}")
 async def get_fake_item(item_id: str, q: str | None = None, short: bool = False):
-    item = None
+    item = {}
     for fake_item in FAKE_ITEMS_DB:
         if fake_item["item_name"] == item_id:
             item = fake_item
