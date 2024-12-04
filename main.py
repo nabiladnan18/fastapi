@@ -1,4 +1,5 @@
 from fastapi import FastAPI
+from models import Item
 
 app = FastAPI()
 
@@ -52,6 +53,8 @@ async def read_user_item(
             {"description": "This is an amazing item that has a long description"}
         )
     return item
+
+
 @app.post("/items/create")
 async def create_item(item: Item):
     item_dict = item.model_dump()
@@ -59,3 +62,8 @@ async def create_item(item: Item):
         price_with_tax = item.price + item.tax
         item_dict.update({"price with tax": price_with_tax})
     return item_dict
+
+
+@app.put("/items/update/{item_id}")
+async def update_item(item_id: str, item: Item):
+    return {"item_id": item_id, **item.model_dump()}
