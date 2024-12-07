@@ -1,4 +1,5 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, Path, Query
+from typing import Annotated
 from models import Item
 
 app = FastAPI()
@@ -13,13 +14,12 @@ async def root():
     return {"message": "Hello World"}
 
 
-@app.get("/items/")
-async def read_item(skip: int = 0, limit: int = 10):
-    return FAKE_ITEMS_DB[skip : skip + limit]
-
-
 @app.get("/items/{item_id}")
-async def get_item(item_id: int):
+async def get_item(
+    item_id: Annotated[
+        int, Path(title="this defines how the `item_id` in path will work", gt=0, le=3)
+    ],
+):
     for item in ITEMS:
         if item["item_id"] == item_id:
             return item
@@ -67,3 +67,15 @@ async def create_item(item: Item):
 @app.put("/items/update/{item_id}")
 async def update_item(item_id: str, item: Item):
     return {"item_id": item_id, **item.model_dump()}
+
+
+@app.get("/items")
+async def read_items(
+    q: Annotated[
+        str | None, Query(min_length=3, max_length=50, pattern="^startswithsendswithh$")
+    ] = None,
+):
+    results = {"items": [{"item_id": "Foo"}, {"item_id": "Bar"}]}
+    if q:
+        results.update({"q": q})
+    return results
