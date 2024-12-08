@@ -14,3 +14,8 @@ class FilterParams(BaseModel):
     offset: int = Field(0, ge=0)
     order_by: Literal["created_at", "updated_at"] = "created_at"
     tags: list[str] = []
+
+
+class User(BaseModel):
+    username: str
+    fullname: str | None

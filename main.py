@@ -1,6 +1,6 @@
-from fastapi import FastAPI, Path, Query
+from fastapi import FastAPI, Path, Query, Body
 from typing import Annotated
-from models import Item, FilterParams
+from models import Item, FilterParams, User
 
 app = FastAPI()
 
@@ -108,7 +108,7 @@ async def read_items_pydantic_query(filter_query: Annotated[FilterParams, Query(
     "/items/update2/{item_id}",
     summary="New Update",
     description="Cleaner way to do it is using `docstrings` under functions + `markdown`. **This here takes precedence.**",
-    response_description="For now just returns 200",
+    response_description="Returns `item_id`, the `item` itself, and `user` information",
 )
 async def update_items2(
     item_id: Annotated[
@@ -120,6 +120,12 @@ async def update_items2(
             le=1000,
         ),
     ],
+    user: Annotated[
+        User,
+        Body(
+            description="This is to show that multiple body params can be included in an API call"
+        ),
+    ],
     item: Item | None = None,
     q: Annotated[str | None, Query(description="This is a random query")] = None,
 ):
@@ -127,6 +133,6 @@ async def update_items2(
     Does this work? This gets overshadowed by the `summary` kwarg in the decorator
     """
 
-    results = {"item_id": item_id, "item": item}
+    results = {"item_id": item_id, "item": item, "user": user}
 
     return results
