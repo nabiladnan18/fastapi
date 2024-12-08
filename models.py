@@ -4,8 +4,10 @@ from typing import Literal
 
 class Item(BaseModel):
     name: str
-    description: str | None = None
-    price: float
+    description: str | None = Field(
+        default=None, title="The description of the item", max_length=300
+    )
+    price: float = Field(gt=0, description="Price must be greater than 0")
     tax: float | None = None
 
 
