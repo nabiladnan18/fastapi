@@ -1,4 +1,4 @@
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, HttpUrl
 from typing import Literal
 
 
@@ -21,3 +21,24 @@ class FilterParams(BaseModel):
 class User(BaseModel):
     username: str
     fullname: str | None
+
+
+class Image(BaseModel):
+    url: HttpUrl
+    name: str
+
+
+class Media(BaseModel):
+    title: str
+    description: str | None = None
+    price: float
+    tax: float | None
+    tags: set[str] = set()
+    image: list[Image] | None = None
+
+
+class Offer(BaseModel):
+    name: str
+    description: str | None = None
+    price: float
+    media: list[Media]

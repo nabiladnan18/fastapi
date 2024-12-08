@@ -1,6 +1,6 @@
 from fastapi import FastAPI, Path, Query, Body
 from typing import Annotated
-from models import Item, FilterParams, User
+from models import Item, FilterParams, Media, User, Offer
 
 app = FastAPI()
 
@@ -148,3 +148,19 @@ async def update_items2(
 async def update_items3(item_id: int, item: Annotated[Item, Body(embed=True)]):
     results = {"item_id": item_id, "item": item}
     return results
+
+
+@app.get("/media/{item_id}")
+async def get_media(item_id: int, item: Media):
+    result = {"item_id": item_id, "item": item}
+    return result
+
+
+@app.post("/offers/")
+async def create_offer(offer: Offer):
+    return offer
+
+
+@app.post("/index-weights/")
+async def create_index_weights(weights: dict[int, float]):
+    return weights
