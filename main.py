@@ -1,6 +1,6 @@
 from fastapi import FastAPI, Path, Query
 from typing import Annotated
-from models import Item
+from models import Item, FilterParams
 
 app = FastAPI()
 
@@ -85,3 +85,19 @@ async def read_items(
     if q:
         results.update({"q": q})
     return results
+
+
+@app.get("/items/queryParamsArePydantic")
+async def read_items_pydantic_query(filter_query: Annotated[FilterParams, Query()]):
+    """
+    Info
+
+    Extended info
+
+    Args:
+        filter_query (Annotated[FilterParams, Query): Uses FilterParams Class
+
+    Returns:
+        Pydantic Model: 😬
+    """
+    return filter_query
