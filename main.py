@@ -126,6 +126,7 @@ async def update_items2(
             description="This is to show that multiple body params can be included in an API call"
         ),
     ],
+    importance: Annotated[int, Body()],
     item: Item | None = None,
     q: Annotated[str | None, Query(description="This is a random query")] = None,
 ):
@@ -133,6 +134,17 @@ async def update_items2(
     Does this work? This gets overshadowed by the `summary` kwarg in the decorator
     """
 
-    results = {"item_id": item_id, "item": item, "user": user}
+    results = {"item_id": item_id, "item": item, "user": user, "importance": importance}
 
+    if q:
+        results.update({"q": q})
+
+    return results
+
+
+@app.put(
+    "/items/update3/{item_id}", summary="Updating items using embedded Body params"
+)
+async def update_items3(item_id: int, item: Annotated[Item, Body(embed=True)]):
+    results = {"item_id": item_id, "item": item}
     return results
