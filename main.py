@@ -102,3 +102,31 @@ async def read_items_pydantic_query(filter_query: Annotated[FilterParams, Query(
             - Clearly not all `md` features work?
     """
     return filter_query
+
+
+@app.put(
+    "/items/update2/{item_id}",
+    summary="New Update",
+    description="Cleaner way to do it is using `docstrings` under functions + `markdown`. **This here takes precedence.**",
+    response_description="For now just returns 200",
+)
+async def update_items2(
+    item_id: Annotated[
+        int,
+        Path(
+            title="Updating an item with a given `item_id`",
+            description="This describes what `item_id` is",
+            ge=0,
+            le=1000,
+        ),
+    ],
+    item: Item | None = None,
+    q: Annotated[str | None, Query(description="This is a random query")] = None,
+):
+    """
+    Does this work? This gets overshadowed by the `summary` kwarg in the decorator
+    """
+
+    results = {"item_id": item_id, "item": item}
+
+    return results
