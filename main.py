@@ -90,14 +90,11 @@ async def read_items(
 @app.get("/items/queryParamsArePydantic")
 async def read_items_pydantic_query(filter_query: Annotated[FilterParams, Query()]):
     """
-    Info
+    Uses a Pydantic Model to filter items.
 
-    Extended info
-
-    Args:
-        filter_query (Annotated[FilterParams, Query): Uses FilterParams Class
-
-    Returns:
-        Pydantic Model: 😬
+    - **FilterParams**
+    - *This is italic*
+        - This ~~is~~ a **subpoint** --> does not strikethrough
+            - Clearly not all `md` features work?
     """
     return filter_query
