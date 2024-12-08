@@ -87,7 +87,11 @@ async def read_items(
     return results
 
 
-@app.get("/items/queryParamsArePydantic")
+@app.get(
+    "/items/queryParamsArePydantic",
+    summary="Using pydantic model to define query",
+    response_description="This is a description of the response",
+)
 async def read_items_pydantic_query(filter_query: Annotated[FilterParams, Query()]):
     """
     Uses a Pydantic Model to filter items.
