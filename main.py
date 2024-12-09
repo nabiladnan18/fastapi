@@ -145,7 +145,23 @@ async def update_items2(
 @app.put(
     "/items/update3/{item_id}", summary="Updating items using embedded Body params"
 )
-async def update_items3(item_id: int, item: Annotated[Item, Body(embed=True)]):
+async def update_items3(
+    item_id: int,
+    item: Annotated[
+        Item,
+        Body(
+            embed=True,
+            examples=[
+                {
+                    "name": "Foo",
+                    "description": "A very nice Item",
+                    "price": 35.4,
+                    "tax": 3.2,
+                }
+            ],
+        ),
+    ],
+):
     results = {"item_id": item_id, "item": item}
     return results
 
