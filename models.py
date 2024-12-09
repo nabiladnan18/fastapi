@@ -10,6 +10,19 @@ class Item(BaseModel):
     price: float = Field(gt=0, description="Price must be greater than 0")
     tax: float | None = None
 
+    model_config = {
+        "json_schema_extra": {
+            "examples": [
+                {
+                    "name": "Foo",
+                    "description": "A very nice item",
+                    "price": 35.4,
+                    "tax": 3.2,
+                },
+            ]
+        }
+    }
+
 
 class FilterParams(BaseModel):
     limit: int = Field(100, gt=0, le=100)
@@ -24,7 +37,7 @@ class User(BaseModel):
 
 
 class Image(BaseModel):
-    url: HttpUrl
+    url: HttpUrl = Field(example="https://www.url.tld")
     name: str
 
 
