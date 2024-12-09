@@ -1,6 +1,8 @@
 from fastapi import FastAPI, Path, Query, Body
 from typing import Annotated
 from models import Item, FilterParams, Media, User, Offer
+from datetime import datetime, time, timedelta
+from uuid import UUID
 
 app = FastAPI()
 
@@ -221,3 +223,24 @@ async def update_item4(
 ):
     results = {"item_id": item_id, "item": item}
     return results
+
+
+@app.get("/items/read1/{item_id}")
+async def read_items1(
+    item_id: UUID,
+    start_datetime: Annotated[datetime, Body()],
+    end_datetime: Annotated[datetime, Body()],
+    process_after: Annotated[timedelta, Body()],
+    repeat_at: Annotated[time | None, Body()] = None,
+):
+    start_process = start_datetime + process_after
+    duration = end_datetime - start_process
+    return {
+        "item_id": item_id,
+        "start_datetime": start_datetime,
+        "end_datetime": end_datetime,
+        "process_after": process_after,
+        "repeat_at": repeat_at,
+        "start_process": start_process,
+        "duration": duration,
+    }
