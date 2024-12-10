@@ -1,4 +1,4 @@
-from fastapi import FastAPI, Path, Query, Body
+from fastapi import FastAPI, Path, Query, Body, Cookie
 from typing import Annotated
 from models import Item, FilterParams, Media, User, Offer
 from datetime import datetime, time, timedelta
@@ -244,3 +244,8 @@ async def read_items1(
         "start_process": start_process,
         "duration": duration,
     }
+
+
+@app.get("/itemCookies/")
+def get_item_using_cookies(ads: Annotated[str | None, Cookie()]):
+    return {"ads": ads}
