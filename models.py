@@ -1,4 +1,4 @@
-from pydantic import BaseModel, Field, HttpUrl
+from pydantic import BaseModel, Field, HttpUrl, EmailStr
 from typing import Literal
 
 
@@ -55,3 +55,56 @@ class Offer(BaseModel):
     description: str | None = None
     price: float
     media: list[Media]
+
+
+class Cookies(BaseModel):
+    model_config = {"extra": "forbid"}
+
+    session_id: str
+    friendface_tracker: str | None = None
+    talktalk_tracker: str | None = None
+
+
+class CommonHeaders(BaseModel):
+    model_config = {"extra": "forbid"}
+
+    host: str
+    save_data: bool
+    if_modified_since: str | None = None
+    traceparent: str | None = None
+    x_tag: list[str] = []
+
+
+class RandomItems(BaseModel):
+    model_config = {
+        "json_schema_extra": {
+            "examples": [
+                {
+                    "name": "Lightsabre",
+                    "description": "Cuts stuff with light",
+                    "price": 123.5,
+                    "tax": 67.8,
+                    "tags": ["jedi", "star wars"],
+                }
+            ]
+        }
+    }
+
+    name: str
+    description: str | None = None
+    price: float
+    tax: float
+    tags: list = []
+
+
+class UserIn(BaseModel):
+    username: str
+    password: str  #! Never store PW in plain text!
+    email: EmailStr
+    full_name: str | None = None
+
+
+class UserOut(BaseModel):
+    username: str
+    email: EmailStr
+    full_name: str | None

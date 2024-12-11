@@ -1,6 +1,17 @@
-from fastapi import FastAPI, Path, Query, Body, Cookie
-from typing import Annotated
-from models import Item, FilterParams, Media, User, Offer
+from fastapi import FastAPI, Path, Query, Body, Cookie, Header
+from typing import Annotated, Any
+from models import (
+    Item,
+    FilterParams,
+    Media,
+    RandomItems,
+    User,
+    Offer,
+    Cookies,
+    CommonHeaders,
+    UserIn,
+    UserOut,
+)
 from datetime import datetime, time, timedelta
 from uuid import UUID
 
@@ -246,6 +257,87 @@ async def read_items1(
     }
 
 
-@app.get("/itemCookies/")
-def get_item_using_cookies(ads: Annotated[str | None, Cookie()]):
-    return {"ads": ads}
+@app.get("/itemCookiesAndHeaders")
+def get_item_using_cookies(
+    ads: Annotated[str | None, Cookie()] = None,
+    trackers: Annotated[Cookies, Cookie()] = None,
+    user_agent: Annotated[str | None, Header()] = None,
+    header_without_conversion: Annotated[
+        CommonHeaders, Header(convert_underscores=False)
+    ] = None,
+):
+    return {
+        "ads": ads,
+        "trackers": trackers,
+        "user-agent": user_agent,
+        "header_without_conversion": header_without_conversion,
+    }
+
+
+@app.get("/itemsDuplicateHeaders")
+async def get_items_dup_headers(x_token: Annotated[list[str] | None, Header()] = None):
+    """
+    example:
+
+    X-Token:foo
+    X-Token: bar
+
+
+    response:
+    {
+        X-TokenValues: [
+            "bar",
+            "foo"
+        ]
+    }
+
+    """
+    return {"X-TokenValues": x_token}
+
+
+@app.post("/create/randomItems")
+async def create_random_items(item: RandomItems) -> RandomItems:
+    return item
+
+
+@app.post(
+    "/create/randomItemsResponseModel",
+    description="Here we are using a `response model` to validate the *response* against a *Pydantic Model*",
+    summary="Validating response against Pydantic Model",
+    response_model=RandomItems,
+)
+async def create_and_validate_response_against_models(item: RandomItems) -> Any:
+    return item
+
+
+@app.get("/get/randomItems")
+async def get_random_items() -> list[RandomItems]:
+    return [
+        RandomItems(
+            name="Item 1",
+            description="Non-descript",
+            price=100.0,
+            tax=12.2,
+            tags=["No tags", "Definitely not a tag"],
+        ),
+        RandomItems(name="name", price=10, tax=1),
+    ]
+
+
+@app.get("/get/randomItemsResponseModel", response_model=list[RandomItems])
+async def get_and_validate_response_against_models() -> Any:
+    return [
+        RandomItems(
+            name="Item 1",
+            description="Non-descript",
+            price=100.0,
+            tax=12.2,
+            tags=["No tags", "Definitely not a tag"],
+        ),
+        RandomItems(name="name", price=10, tax=1),
+    ]
+
+
+@app.post("/user/create", response_model=UserOut)
+async def create_user(user: UserIn) -> Any:
+    return user
