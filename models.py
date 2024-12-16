@@ -108,3 +108,13 @@ class UserOut(BaseModel):
     username: str
     email: EmailStr
     full_name: str | None
+
+
+class BaseUser(BaseModel):
+    username: str
+    email: EmailStr
+    full_name: str | None = None
+
+
+class UserIn2(BaseUser):
+    password: str

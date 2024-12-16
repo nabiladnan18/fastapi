@@ -11,6 +11,8 @@ from models import (
     CommonHeaders,
     UserIn,
     UserOut,
+    UserIn2,
+    BaseUser,
 )
 from datetime import datetime, time, timedelta
 from uuid import UUID
@@ -340,4 +342,9 @@ async def get_and_validate_response_against_models() -> Any:
 
 @app.post("/user/create", response_model=UserOut)
 async def create_user(user: UserIn) -> Any:
+    return user
+
+
+@app.post("/user/")
+async def create_user2(user: UserIn2) -> BaseUser:
     return user
